@@ -1,0 +1,312 @@
+import { bytes2String, dumpSo, enumClassLoader, stacks, storeInfo } from "./utils";
+
+namespace Hook {
+
+/**
+    var filterFlog = ["User", "AllInUpdateManager",];
+    var stacksLog = false;
+
+    export function f00() {
+
+        console.log("\n");
+        Java.perform(function () {
+            Java.openClassFile("/data/local/tmp/r0gson.dex").load();
+            const gson = Java.use('com.r0ysue.gson.Gson');
+
+            //签名
+            const DataUtil = Java.use("com.kwai.common.utils.DataUtil");
+            console.log(`klass - ${DataUtil}`);
+            if (DataUtil) {
+                DataUtil.getPackageSignature.implementation = function (p0: object, p1: string) {
+                    stacks("DataUtil.getPackageSignature");
+                    console.log(`p0 - ${gson.$new().toJson(p0)}, p1 - ${p1}`);
+                    let result = this.getPackageSignature(p0, p1);
+                    console.log(`result - ${result}`);
+                    return result;
+                }
+                DataUtil.validateSignature.overload('android.content.Context').implementation = function (p0: object) {
+                    stacks("DataUtil.validateSignature");
+                    console.log(`p0 - ${gson.$new().toJson(p0)}`);
+                    let result = this.validateSignature(p0);
+                    console.log(`result - ${result}`);
+                    return result;
+                }
+                DataUtil.validateSignature.overload('android.content.Context', 'java.lang.String').implementation = function (p0: object, p1: string) {
+                    stacks("DataUtil.validateSignature");
+                    console.log(`p0 - ${gson.$new().toJson(p0)}, p1 - ${p1}`);
+                    let result = this.validateSignature(p0, p1);
+                    console.log(`result - ${result}`);
+                    return result;
+                }
+            }
+
+            /* oppo 特有 */
+            // const OpUser = Java.use("com.kwai.sdk.OpUser");
+            // console.log(`klass - ${OpUser}`);
+            // if (OpUser) {
+            //     OpUser.login.implementation = function () {
+            //         stacks("OpUser.login");
+            //         return this.login();
+            //     }
+            //     OpUser.showAccountCenter.implementation = function (p0: object) {
+            //         stacks("OpUser.showAccountCenter");
+            //         return this.showAccountCenter(p0);
+            //     }
+            // }
+
+            // const OpSDK = Java.use("com.kwai.sdk.OpSDK");
+            // console.log(`klass - ${OpSDK}`);
+            // if (OpSDK) {
+            //     OpSDK.unInit.implementation = function () {
+            //         stacks("OpSDK.unInit");
+            //         const result = this.unInit();
+            //         console.log(`[unInit] result - ${result}`);
+            //         return result;
+            //     }
+            // }
+
+            // const GCInternalImpl = Java.use("com.nearme.game.sdk.GCInternalImpl");
+            // console.log(`klass - ${GCInternalImpl}`);
+            // if (GCInternalImpl) {
+            //     GCInternalImpl.jumpLeisureSubject.implementation = function () {
+            //         console.log(`GCInternalImpl.jumpLeisureSubject`);
+            //         return this.jumpLeisureSubject();
+            //     }
+            // }
+
+            // const GameCenterSDK = Java.use("com.nearme.game.sdk.GameCenterSDK");
+            // console.log(`klass - ${GameCenterSDK}`);
+            // if (GameCenterSDK) {
+            //     GameCenterSDK.jumpLeisureSubject.implementation = function () {
+            //         console.log(`GameCenterSDK.jumpLeisureSubject`);
+            //         return this.jumpLeisureSubject();
+            //     }
+            //     GameCenterSDK.doLogin.implementation = function (p0: object, p1: object) {
+            //         stacks("GameCenterSDK.doLogin");
+            //         return this.doLogin(p0, p1);
+            //     }
+            // }
+
+            // const MarketDownloadHelper = Java.use("com.nearme.platform.opensdk.pay.download.util.MarketDownloadHelper");
+            // console.log(`klass - ${MarketDownloadHelper}`);
+            // if (MarketDownloadHelper) {
+            //     MarketDownloadHelper.jumpMarketItemDetail.overload('android.content.Context', 'java.lang.String', 'boolean').implementation = function (p0:object, p1:string, p2:boolean) {
+            //         stacks("jumpMarketItemDetail-3");
+            //         console.log(`p0 - ${p0}, p1 - ${p1}, p2 - ${p2}`)
+            //         return this.jumpMarketItemDetail(p0, p1, p2);
+            //     }
+            //     MarketDownloadHelper.jumpMarketItemDetail.overload('android.content.Context', 'java.lang.String').implementation = function (p0:object, p1:string) {
+            //         stacks("jumpMarketItemDetail-2");
+            //         console.log(`p0 - ${p0}, p1 - ${p1}`)
+            //         return this.jumpMarketItemDetail(p0, p1);
+            //     }
+            // }
+
+            // const HookUtil = Java.use("com.nearme.game.sdk.common.hook.HookUtil");
+            // console.log(`klass - ${HookUtil}`);
+            // if (HookUtil) {
+            //     HookUtil.init.implementation = function (p0: object, p1: object) {
+            //         stacks("HookUtil.init ");
+            //         // console.log(`p0 - ${gson.$new().toJson(p0)}, p1 - ${gson.$new().toJson(p1)}`)
+            //         return this.init(p0, p1);
+            //     }
+            // }
+
+            /* androi 与 u3d 的消息对接 */
+            // const UnityPlayer2 = Java.use("com.unity3d.player.UnityPlayer$f$2");
+            // console.log(`klass - ${UnityPlayer2}`);
+            // if (UnityPlayer2) {
+            //     UnityPlayer2.queueIdle.implementation = function () {
+            //         let result = this.queueIdle();
+            //         if (result == false) {
+            //             stacks("UnityPlayer2.queueIdle");
+            //         }
+            //         console.log(`[UnityPlayer2.queueIdle] result - ${result}`);
+            //         return result;
+            //     }
+            // }
+
+
+
+
+
+
+            // 设置登录监听和回调函数
+            // const LJSDUnitySDk = Java.use("com.ljsd.zhj.LJSDUnitySDk");
+            // console.log(`klass - ${LJSDUnitySDk}`);
+            // if (LJSDUnitySDk) {
+            //     LJSDUnitySDk.login.implementation = function (p0: object) {
+            //         stacks("LJSDUnitySDk.login");
+            //         console.log(`p0 - ${gson.$new().toJson(p0)}`);
+            //         return this.login(p0);
+            //     }
+            // }
+            // const LJSDAllInListener = Java.use("com.ljsd.zhj.LJSDAllInListener");
+            // console.log(`klass - ${LJSDAllInListener}`);
+            // if (LJSDAllInListener) {
+            //     LJSDAllInListener.setCallback.implementation = function (p0: object, p1:string) {
+            //         stacks("LJSDAllInListener.setCallback");
+            //         console.log(`p0 - ${gson.$new().toJson(p0)}, p1 - ${p1}`);
+            //         return this.setCallback(p0, p1);
+            //     }
+            // }
+
+            /* 启动登录流程 */
+            // const KwaiUserDispatcher = Java.use("com.kwai.common.plugins.router.KwaiUserDispatcher");
+            // console.log(`klass - ${KwaiUserDispatcher}`);
+            // if (KwaiUserDispatcher) {
+            //     KwaiUserDispatcher.login.overload('com.kwai.common.user.AllInUserListener', 'com.kwai.common.user.UserType$Login', 'boolean').implementation = function (p0: object, p1: object, p2: boolean) {
+            //         stacks("KwaiUserDispatcher.login -3 ");
+            //         console.log(`p0 - ${gson.$new().toJson(p0)}, p1 - ${gson.$new().toJson(p1)}, p2 - ${p2}`)
+            //         return this.login(p0, p1, p2);
+            //     }
+            //     // KwaiUserDispatcher.isParasiticGameLogin.implementation = function () {
+            //     //     const result = this.isParasiticGameLogin();
+            //     //     console.log(`[isParasiticGameLogin] result - ${result}`);
+            //     //     return result;
+            //     // }
+            // }
+
+            // const KwaiBaseDispatcher = Java.use("com.kwai.common.plugins.router.KwaiBaseDispatcher");
+            // console.log(`klass - ${KwaiBaseDispatcher}`);
+            // if (KwaiBaseDispatcher) {
+            //     KwaiBaseDispatcher.getPlugin.implementation = function () {
+            //         const result = this.getPlugin();
+            //         console.log(`[getPlugin] result - ${gson.$new().toJson(result)}`);
+            //         return result;
+            //     }
+            // }
+
+            // const KwaiUserDispatcher11 = Java.use("com.kwai.common.plugins.router.KwaiUserDispatcher$11");
+            // console.log(`klass - ${KwaiUserDispatcher11}`);
+            // if (KwaiUserDispatcher11) {
+            //     KwaiUserDispatcher11.run.implementation = function () {
+            //         stacks("KwaiUserDispatcher11.run");
+            //         return this.run();
+            //     }
+            // }
+
+            // const UpdateManager  = Java.use("com.kwai.common.internal.upgrade.UpdateManager");
+            // console.log(`klass - ${UpdateManager}`);
+            // if (UpdateManager) {
+            //     UpdateManager.checkUpdateWithTimeOut.implementation = function (p0:object) {
+            //         stacks("UpdateManager.checkUpdateWithTimeOut");
+            //         console.log(`p0 - ${p0}`);
+            //         return this.checkUpdateWithTimeOut(p0);
+            //     }
+            // }
+
+
+
+
+
+
+
+
+            // const PermissionLimitManager = Java.use("com.kwai.common.permission.PermissionLimitManager");
+            // console.log(`klass - ${PermissionLimitManager}`);
+            // if (PermissionLimitManager) {
+            //     PermissionLimitManager.isPermissionProxy.implementation = function () {
+            //         stacks("PermissionLimitManager.isPermissionProxy");
+            //         const result = this.isPermissionProxy();
+            //         console.log(`[isPermissionProxy] result - ${result}`);
+            //         return result;
+            //     }
+            // }
+
+            // const h = Java.use("com.kwai.opensdk.h");
+            // console.log(`klass - ${h}`);
+            // if (h) {
+            //     h.login.overload('com.kwai.common.user.AllInUserListener').implementation = function (p0:object) {
+            //         stacks("h.login - 1");
+            //         console.log(`p0 - ${gson.$new().toJson(p0)}`)
+            //         return  this.login(p0);
+            //     }
+            //     h.login.overload('com.kwai.common.user.AllInUserListener', 'com.kwai.common.user.UserType$Login').implementation = function (p0:object, p1:object) {
+            //         stacks("h.login - 2");
+            //         console.log(`p0 - ${gson.$new().toJson(p0)}, p1 - ${gson.$new().toJson(p1)}`)
+            //         return  this.login(p0, p1);
+            //     }
+            // }
+
+            // const AllInServer = Java.use("com.kwai.common.AllInServer");
+            // console.log(`klass - ${AllInServer}`);
+            // if (AllInServer) {
+            //     AllInServer.parseLoginResult.implementation = function (p0:object, p1:boolean) {
+            //         stacks("parseLoginResult");
+            //         console.log(`p0 - ${p0}, p1 - ${p1}`)
+            //         return  this.parseLoginResult(p0, p1);
+            //     }
+            // }
+
+        });
+
+
+        // const cocos2dlua = Process.findModuleByName("libcocos2dlua.so");
+        // // console.log(`cocos2dlua  - ${cocos2dlua}`);
+        // if (cocos2dlua) {
+        //     const symbs = cocos2dlua.enumerateSymbols();
+        //     console.log(`symbs - ${symbs}`);
+        //     for (let i = 0; i < symbs.length; i++) {
+        //         // console.log(`[${i}] name - ${symbs[i].name}, addr - ${symbs[i].address}`);
+        //         storeInfo("/sdcard/dump/export_symbols.log", `[${i}] name - ${symbs[i].name}, addr - ${symbs[i].address}\n`);
+        //     }
+        //     console.log("foreach end!");
+        // }
+
+    }
+
+    export function log() {
+        if (Java.available) {
+            Java.perform(() => {
+                Java.openClassFile("/data/local/tmp/r0gson.dex").load();
+                const gson = Java.use('com.r0ysue.gson.Gson');
+
+                const Flog = Java.use("com.kwai.common.internal.log.Flog");
+                console.log(`klass - ${Flog}`);
+                if (Flog) {
+                    Flog.d.implementation = function (p0: string, p1: string) {
+                        for (let i = 0; i < filterFlog.length; i++) {
+                            if (p0 && p0.indexOf(filterFlog[i]) != -1) {
+                                if(stacksLog) stacks("Flog.d");
+                                console.log(`[Flog.d] p0 - ${p0}, p1 - ${p1}`)
+                                break;
+                            }
+                        }
+                        return this.d(p0, p1);
+                    }
+                    Flog.e.implementation = function (p0: string, p1: string) {
+                        if(stacksLog) stacks("Flog.e");
+                        console.log(`[Flog.e] p0 - ${p0}, p1 - ${p1}`)
+                        return this.e(p0, p1);
+                    }
+                }
+
+                const LogUtils = Java.use("com.nearme.plugin.framework.LogUtils");
+                console.log(`LogUtils - ${LogUtils}`);
+                if (LogUtils) {
+                    LogUtils.error.overload('java.lang.String', 'java.lang.String', 'java.lang.Throwable').implementation = function (p0: string, p1: string, p2: object) {
+                        if(stacksLog)  stacks("LogUtils.error");
+                        console.log(`[LogUtils.error] p0 - ${p0}, p1 - ${p1}, p2 - ${gson.$new().toJson(p2)}`);
+                        return this.error(p0, p1, p2);
+                    }
+                    LogUtils.log.overload('java.lang.String', 'java.lang.String', 'java.lang.Throwable').implementation = function (p0: string, p1: string, p2: object) {
+                        if(stacksLog) stacks("LogUtils.log");
+                        console.log(`[LogUtils.log] p0 - ${p0}, p1 - ${p1}, p2 - ${gson.$new().toJson(p2)}`);
+                        return this.log(p0, p1, p2);
+                    }
+                }
+            });
+        }
+    }
+ */
+}
+
+setImmediate(() => {
+    Hook.f00();
+    Hook.log();
+
+    // setTimeout(function () {
+    //     Hook.f00();
+    // }, 5000)
+})

@@ -1,0 +1,233 @@
+import { dumpSo, stacks, storeInfo } from "./utils";
+
+function f00() {
+    console.log("\n");
+    let so = Process.findModuleByName("libil2cpp.so");
+    console.log(`so - ${so?.name}, addr - ${so?.base}`);
+    if (so) {
+        let base = so.base;
+
+        // hook settimeScale
+        // Interceptor.attach(base.add(0x469360), {
+        //     onEnter: function (args) {
+        //         this.hook = false;
+        //         let api_name = args[0].readCString();
+        //         if (api_name?.indexOf("set_timeScale") != -1) {
+        //             console.log(`a1 - ${api_name}`);
+        //             this.hook = true;
+        //         }
+        //     },
+        //     onLeave: function (retValue) {
+        //         // console.log(`hook - ${this.hook}`);
+        //         if (this.hook) {
+        //             console.log(`SetTimeScale - ${retValue}`);
+        //             var settimeScale = new NativeFunction(retValue, 'void', ['float']);
+        //             Interceptor.replace(settimeScale, new NativeCallback(function (dt) {
+        //                 console.log(`replace settimeScale`);
+        //                 dt = 1.0;
+        //             }, 'void', ['float']));
+        //             // settimeScale(2.0);
+        //         }
+        //         return retValue;
+        //     }
+        // });
+
+        // BattleBaseView.GetTimeScale
+        var sub_1905994 = base.add(0x01905994);
+        var GetTimeScale = new NativeFunction(sub_1905994, 'float', ['pointer']);
+        Interceptor.replace(sub_1905994, new NativeCallback(function (thiz): number {
+            var dt = GetTimeScale(thiz);
+            var m_curTimeScale = thiz.add(0xa0).readInt();
+            console.log(`[BattleBaseView.GetTimeScale] thiz - ${thiz}, dt - ${dt}, m_curTimeScale - ${m_curTimeScale}`);
+            thiz.add(0xa0).writeInt(2);
+            m_curTimeScale = thiz.add(0xa0).readInt();
+            console.log(`[BattleBaseView.GetTimeScale] thiz - ${thiz}, dt - ${dt}, m_curTimeScale - ${m_curTimeScale}`);
+            return dt;
+        }, 'float', ['pointer']))
+
+        // BattleBaseView.Start
+        // var sub_18FDF70 = base.add(0x18FDF70);
+        // var Start = new NativeFunction(sub_18FDF70, 'void', ['pointer']);
+        // Interceptor.replace(sub_18FDF70, new NativeCallback(function(thiz){
+        //     // Start(thiz);
+        //     var m_curTimeScale = thiz.add(0xa0).readInt();
+        //     console.log(`[BattleBaseView.Start] this - ${thiz}, m_curTimeScale - ${m_curTimeScale}`);
+        //     thiz.add(0xa0).writeInt(2);
+        //     console.log(`[BattleBaseView.Start] this - ${thiz}, m_curTimeScale - ${m_curTimeScale}`);
+        // },'void', ['pointer']));
+
+        
+        // BattleBaseView.SetupTimeScaleLabel
+        var sub_1900254 = base.add(0x1900254);
+        Interceptor.attach(sub_1900254, {
+            onEnter: function (args) {
+                console.log(`sub_1900254`);
+            },
+            onLeave: function (retValue) {
+                return retValue;
+            }
+        });
+
+        // BattleBaseView.SetAnimationScale
+        var sub_1907834 = base.add(0x1907834);
+        Interceptor.attach(sub_1907834, {
+            onEnter: function (args) {
+                console.log(`sub_1907834`);
+            },
+            onLeave: function (retValue) {
+                return retValue;
+            }
+        });
+
+        // BattleBaseView.SetParticleSystemTimeScale
+        var sub_1907b14 = base.add(0x1907b14);
+        Interceptor.attach(sub_1907b14, {
+            onEnter: function (args) {
+                console.log(`sub_1907b14`);
+            },
+            onLeave: function (retValue) {
+                return retValue;
+            }
+        });
+
+        // BattleBaseView.Update
+        // var sub_19004A8 = base.add(0x19004A8);
+        // Interceptor.attach(sub_19004A8, {
+        //     onEnter: function (args) {
+        //         console.log(`sub_19004A8`);
+        //         var thiz = args[0];
+        //         let HeroDialogMode = thiz.add(0xf8).readPointer();
+        //         let m_time= HeroDialogMode.add(0x8).readFloat();
+        //         console.log(`HeroDialogMode - ${HeroDialogMode}, m_time - ${m_time}`);
+        //     },
+        //     onLeave: function (retValue) {
+        //         return retValue;
+        //     }
+        // });
+
+        // Write   BattleFightRequest
+        var sub_14816f0 = base.add(0x14816f0);
+        Interceptor.attach(sub_14816f0, {
+            onEnter: function (args) {
+                console.log(`sub_14816f0`);
+            },
+            onLeave: function (retValue) {
+                return retValue;
+            }
+        });
+
+        // Read BattleFightRequest
+        var sub_14818d8 = base.add(0x14818d8);
+        Interceptor.attach(sub_14818d8, {
+            onEnter: function (args) {
+                console.log(`sub_14818d8`);
+            },
+            onLeave: function (retValue) {
+                return retValue;
+            }
+        });
+
+        // Write BattleFightResponse
+        var sub_1481aec = base.add(0x1481aec);
+        Interceptor.attach(sub_1481aec, {
+            onEnter: function (args) {
+                console.log(`sub_1481aec`);
+            },
+            onLeave: function (retValue) {
+                return retValue;
+            }
+        });
+
+        // Read BattleFightResponse
+        var sub_1481dc4 = base.add(0x1481dc4);
+        Interceptor.attach(sub_1481dc4, {
+            onEnter: function (args) {
+                console.log(`sub_1481dc4`);
+            },
+            onLeave: function (retValue) {
+                return retValue;
+            }
+        });
+
+        // Read BattleFightResponse
+        var sub_17719d8 = base.add(0x17719d8);
+        Interceptor.attach(sub_17719d8, {
+            onEnter: function (args) {
+                console.log(`sub_17719d8`);
+            },
+            onLeave: function (retValue) {
+                return retValue;
+            }
+        });
+
+        // Read BattleFightResponse
+        var sub_1e94b28 = base.add(0x1e94b28);
+        Interceptor.attach(sub_1e94b28, {
+            onEnter: function (args) {
+                console.log(`sub_1e94b28`);
+            },
+            onLeave: function (retValue) {
+                return retValue;
+            }
+        });
+
+
+
+
+
+    }
+}
+
+function f01() {
+    // const libc = Process.findModuleByName("libc.so");
+    // console.log(`libc - ${libc?.name}, addr - ${libc?.base}`);
+    // if (libc) {
+    //     const exports = libc.enumerateExports();
+    //     if (exports) {
+    //         for (let i = 0; i < exports.length; i++) {
+    //             if (exports[i].name.indexOf("recv") != -1 || exports[i].name.indexOf("send") != -1)
+    //                 console.log(`symbol - ${exports[i].name}, addr - ${exports[i].address}`);
+    //         }
+    //     }
+    // }
+
+    const send_hook = Module.getExportByName("libc.so", "send");
+    console.log(`send_hook - ${send_hook}`);
+    const recv_hook = Module.getExportByName("libc.so", "recv");
+    console.log(`recv_hook - ${recv_hook}`);
+    if (send_hook) {
+        Interceptor.attach(send_hook, {
+            onEnter: function (args) {
+                stacks("send", this.context);
+                console.log("send");
+            },
+            onLeave: function (retv) {
+                return retv;
+            }
+        })
+    }
+
+    if (recv_hook) {
+        Interceptor.attach(recv_hook, {
+            onEnter: function (args) {
+                stacks("recv", this.context);
+                console.log("recv");
+            },
+            onLeave: function (retv) {
+                return retv;
+            }
+        })
+    }
+
+}
+
+
+setImmediate(() => {
+    // f00();
+
+    setTimeout(function () {
+        // dumpSo("libunity.so");
+        f00();
+        f01();
+    }, 5000)
+})

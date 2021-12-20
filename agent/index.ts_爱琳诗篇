@@ -1,0 +1,380 @@
+import { stacks, storeInfo } from "./utils";
+
+namespace Hook {
+    export function f00() {
+        console.log("\n");
+        let libegret = Process.findModuleByName("libegret.so");
+        console.log(`so - ${libegret?.name}, addr - ${libegret?.base}`);
+        if (libegret) {
+            // var RAND_load_file = libegret.findExportByName("RAND_load_file");
+            // console.log(`RAND_load_file - ${RAND_load_file}`);
+            // if(RAND_load_file)
+            // {
+            //     Interceptor.attach(RAND_load_file, {
+            //         onEnter: function(args){
+            //             console.log("hook");
+            //         },
+            //         onLeave:function(retVal){}
+            //     });
+            // }
+
+            // let sub_3A29A0 = libegret.base.add(0x003A29A0 + 1)
+            // Interceptor.attach(sub_3A29A0, {
+            //     onEnter: function (args) {
+            //         console.error("onEnter:");
+            //         this.arg1 = args[0];
+            //         this.arg2 = args[1];
+            //         console.log(`arg1 - ${this.arg1}, arg2 - ${this.arg2}, arg3 - ${args[2]}, arg4 - ${args[3]}, arg5 - ${args[4]}, arg6 - ${args[5]}, arg7 - ${args[6]}`);
+            //         console.log(`arg1 \n ${hexdump(this.arg1, { length: 0x30 })}`);
+            //         console.log(`arg2 \n ${hexdump(this.arg2, { length: 0x30 })}`);
+            //     },
+            //     onLeave: function (retVal) {
+            //         console.error("onLeave:");
+            //         console.log(`arg1 \n ${hexdump(this.arg1, { length: 0x30 })}`);
+            //         console.log(`arg2 \n ${hexdump(this.arg2, { length: 0x30 })}`);
+            //     }
+            // });
+
+            /**
+             * 猜测该函数是填充表
+             */
+            // let sub_21A650 = libegret.base.add(0x21A650 + 1)
+            // Interceptor.attach(sub_21A650, {
+            //     onEnter: function (args) {
+            //         this.a1 = args[0];
+            //         this.a2 = args[1];
+            //         console.error("onEnter:");
+            //         // //v3 = *a2;
+            //         // let v3 = ptr(this.arg2).readPointer();
+            //         // console.log(`v3 - ${v3}`);
+            //         // if (!v3.isNull()) {
+            //         //     // v4 = *(_DWORD **)(v3 + 128);
+            //         //     let v4 = v3.add(128).readPointer();
+            //         //     console.log(`v4 - ${v4}`);
+            //         //     // v10 = *(_DWORD **)(v3 + 80);
+            //         //     let v10 = v3.add(80).readPointer();
+            //         //     console.log(`v10 - ${v10}`);
+            //         // }
+            //         console.log(`code:\n ${hexdump(this.a1, { length: 0x10 })}`);
+            //     },
+            //     onLeave: function (retVal) {
+            //         console.error("onLeave:");
+            //         console.log(`code:\n ${hexdump(this.a1, { length: 0x10 })}`);
+            //         console.log(`code - ` + (this.a1).readPointer().readCString());
+            //         console.error("--------------------------------------------------");
+            //     }
+            // });
+
+            /*
+             * 通过搜索  - took %0.3f ms]\n -> 可以找到解析 JS 函数的地方
+             * 只修改了第一个参数, 第一个参数是一个字符串, 初步判断是一个脚本的函数名
+             * 调用栈都是来自同一个地方
+             * [16:27:27:287] [1296] >>>>>  sub_390E2A start
+               0xbf7a069f libegret.so!0x21a69f
+               0xbf7a069f libegret.so!0x21a69f
+               0xbf7c35e7 libegret.so!0x23d5e7
+               0xbf7c3b37 libegret.so!0x23db37
+               0xbf7a4221 libegret.so!0x21e221
+               0xbfb7a8cf libegret.so!0x5f48cf
+               0x5450655c
+               [16:27:27:287] [1296] >>>>> sub_390E2A end
+             */
+            // let sub_390E2A = libegret.base.add(0x00390E2A + 1)
+            // Interceptor.attach(sub_390E2A, {
+            //     onEnter: function (args) {
+            //         this.a1 = args[0];
+            //         this.a2 = args[1];
+            //         console.error("onEnter");
+            //         // stacks("sub_390E2A", this.context);
+            //         console.log(`a2 - ${this.a2}\n ${hexdump(this.a2, {length:0x30})}`);
+            //     },
+            //     onLeave: function (retVal) {
+            //         console.error("onLeave");
+            //         console.log(`a2 - ${this.a2}\n ${hexdump(this.a2, {length:0x30})}`);
+            //         console.error("------------------------------------------------------");
+            //     }
+            // });
+
+            /**
+             * 猜测是一个解密的地方
+             */
+            // let sub_1F1E56 = libegret.base.add(0x1F1E56 + 1)
+            // Interceptor.attach(sub_1F1E56, {
+            //     onEnter: function (args) {
+            //         this.a1 = args[0];
+            //         this.a2 = args[1];
+            //         this.a3 = args[2];
+            //         console.error("onEnter");
+            //         console.log(`a1 - ${this.a1}, a2 - ${this.a2}, a3 - ${this.a3}`);
+            //         console.log(`a1 - ${this.a1}\n ${hexdump(this.a1, {length:0x04})}`);
+            //     },
+            //     onLeave: function (retVal) {
+            //         console.error("onLeave");
+            //         console.log(`a1 - ${this.a1}\n ${hexdump(this.a1, {length:0x04})}`);
+            //         console.error("------------------------------------------------------");
+            //     }
+            // });
+
+            /**
+             * 找到编译流程, 现确认调用链
+                [17:40:15:557] [6595] >>>>>  sub_21E0FC start
+                0xc1f2304b libegret.so!0x21e04b                     -> int __fastcall sub_21E01C(_DWORD *a1, int a2)
+                0xc22f7ec7 libegret.so!0x5f2ec7                     -> int __fastcall sub_5F2E6C(int a1, _DWORD *a2, _DWORD *a3)
+                0x4ab8655c
+                [17:40:15:557] [6595] >>>>> sub_21E0FC end
+
+                [17:40:18:245] [6595] >>>>>  sub_21E0FC start
+                0xc22f98cf libegret.so!0x5f48cf                     -> int __fastcall sub_5F46C0(int a1, _DWORD *a2, _DWORD *a3)
+                [17:40:18:245] [6595] >>>>> sub_21E0FC end
+
+                [17:40:18:267] [6595] >>>>>  sub_21E0FC start
+                0xc1f2304b libegret.so!0x21e04b
+                0xc22f814b libegret.so!0x5f314b                     -> int __fastcall sub_5F30F0(int a1, _DWORD *a2, _DWORD *a3)
+                0x4ab8655c
+                [17:40:18:267] [6595] >>>>> sub_21E0FC end
+
+                [17:40:19:207] [6595] >>>>>  sub_21E0FC start
+                0xc1f2304b libegret.so!0x21e04b
+                0xc22f7ec7 libegret.so!0x5f2ec7
+                0x4ab8655c
+                [17:40:19:207] [6595] >>>>> sub_21E0FC end               
+             */
+            // let sub_21E0FC = libegret.base.add(0x21E0FC + 1)
+            // Interceptor.attach(sub_21E0FC, {
+            //     onEnter: function (args) {
+            //         this.a1 = args[0];
+            //         this.a2 = args[1];
+            //         this.a3 = args[2];
+            //         this.a4 = args[3];
+            //         console.error("onEnter");
+            //         stacks("sub_21E0FC", this.context);
+            //     },
+            //     onLeave: function (retVal) {
+            //         console.error("onLeave");
+            //         console.error("------------------------------------------------------");
+            //     }
+            // });
+
+            // let sub_5F2E6C = libegret.base.add(0x5F2E6C + 1)
+            // Interceptor.attach(sub_5F2E6C, {
+            //     onEnter: function (args) {
+            //         this.a1 = args[0];
+            //         this.a2 = args[1];
+            //         this.a3 = args[2];
+            //         console.error("onEnter");
+            //         stacks("sub_5F2E6C", this.context);
+            //         // console.log(`a1 - ${this.a1}, a2 - ${this.a2}, a3 - ${this.a3}`);
+            //         // console.log(`a2 \n ${hexdump(this.a2.readPointer(), {length:0x30})}`);
+            //         // console.log(`a3 \n ${hexdump(this.a3.readPointer(), {length:0x30})}`);
+            //     },
+            //     onLeave: function (retVal) {
+            //         console.error("onLeave");
+            //         console.error("------------------------------------------------------");
+            //     }
+            // });
+
+            // let sub_1A40C8 = libegret.base.add(0x1A40C8 + 1)
+            // Interceptor.attach(sub_1A40C8, {
+            //     onEnter: function (args) {
+            //         this.a1 = args[0];
+            //         this.a2 = args[1];
+            //         this.a3 = args[2];
+            //         this.a4 = args[3];
+            //         console.error("onEnter");
+            //         // stacks("sub_1A40C8", this.context);
+            //         // console.log(`a1 - ${this.a1}, a2 - ${this.a2}, a3 - ${this.a3}`);
+            //         // console.log(`a2 \n ${hexdump(this.a2.readPointer(), {length:0x30})}`);
+            //         // console.log(`a3 \n ${hexdump(this.a3.readPointer(), {length:0x30})}`);
+            //     },
+            //     onLeave: function (retVal) {
+            //         console.error("onLeave");
+            //         console.error("------------------------------------------------------");
+            //     }
+            // });
+        }
+
+        // const libc = Process.findModuleByName("libc.so");
+        // console.log(`so - ${libc?.name}, addr - ${libc?.base}`);
+        // if(libc){
+
+        // }
+    }
+
+    export function f01(): boolean {
+        console.log("\n");
+        let libegret = Process.findModuleByName("libegret.so");
+        // console.log(`libegret - ${libegret}`);
+        if (libegret) {
+            var pass = ["png", "jpg", "mp3", "json", "cfg", "fnt", "ttf"];
+            let imports = libegret.enumerateImports();
+            // console.log(`imports - ${imports}`);
+            if (imports) {
+                for (let i = 0; i < imports.length; i++) {
+                    if (imports[i].name.indexOf("fopen") != -1) {
+                        // console.log("fopen");
+                        let _fopen = imports[i].address;
+                        if (_fopen) {
+                            Interceptor.attach(_fopen, {
+                                onEnter: function (args) {
+                                    let file_name = args[0].readCString();
+                                    let isPass = false;
+                                    for (let i = 0; i < pass.length; i++) {
+                                        if (file_name && file_name?.indexOf(pass[i]) != -1) {
+                                            isPass = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!isPass) {
+                                        console.log(`[fopen] filename - ${file_name}`);
+                                    }
+                                },
+                                onLeave: function (retval) { }
+                            });
+                        }
+                    }
+                    else if (imports[i].name.indexOf("AAssetManager_open") != -1) {
+                        // console.log("AAssetManager_open");
+                        let AAssetManager_open = imports[i].address;
+                        if (AAssetManager_open) {
+                            Interceptor.attach(AAssetManager_open, {
+                                onEnter: function (args) {
+                                    let file_name = args[1].readCString();
+                                    let isPass = false;
+                                    for (let i = 0; i < pass.length; i++) {
+                                        if (file_name && file_name?.indexOf(pass[i]) != -1) {
+                                            isPass = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!isPass) {
+                                        // stacks("AAssetManager_open", this.context);
+                                        console.log(`[AAssetManager_open] filename - ${file_name}`);
+                                    }
+                                },
+                                onLeave: function (retval) { }
+                            });
+                        }
+                    }
+                    else if (imports[i].name.indexOf("AAsset_openFileDescriptor") != -1) {
+                        // console.log("AAsset_openFileDescriptor");
+                        let AAsset_openFileDescriptor = imports[i].address;
+                        if (AAsset_openFileDescriptor) {
+                            Interceptor.attach(AAsset_openFileDescriptor, {
+                                onEnter: function (args) {
+                                    let outStart = args[1];
+                                    console.log(`[AAsset_openFileDescriptor] outStart - ${outStart}`);
+                                },
+                                onLeave: function (retval) { }
+                            });
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+    export function f02(): boolean {
+        var dic = new Map<string, NativePointer>();
+        let libc = Process.getModuleByName("libc.so");
+        if (libc) {
+            let exports = libc.enumerateExports();
+            if (exports) {
+                for (let i = 0; i < exports.length; i++) {
+                    let addr = exports[i].address;
+                    let name = exports[i].name;
+                    if (addr && (name.indexOf("open") != -1)) {
+                        dic.set(name, addr);
+                        // console.log(`name - ${name}, addr - ${addr}`);
+                        Interceptor.attach(addr, {
+                            onEnter: function (args) {
+                                let addr = this.context.pc;
+                                dic.forEach((value, key) => {
+                                    if (addr.add(1).equals(value) || addr.equals(value)) {
+                                        if (key.indexOf("openat") != -1) {
+                                            // console.log(`fiilename - ${args[1].readCString()}`);
+                                            storeInfo("/sdcard/dump/alsp.log", `fiilename - ${args[1].readCString()}\n`);
+                                        }
+                                        // else if (key.indexOf("open") != -1) {
+                                        //     let filename = args[0].readCString();
+                                        //     if (filename && filename?.indexOf("/data") == -1 && args[0].readCString()?.indexOf("js") != -1) {
+                                        //         console.log(`fiilename - ${filename}`);
+                                        //     }
+                                        // }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+    export function f03() {
+        var fds: any[] = [];
+        let idx = 0;
+        var _AAsset_read: NativeFunction<number, [NativePointerValue, NativePointerValue, number | UInt64]> | null = null;
+        var _AAsset_getLength: NativeFunction<number, [NativePointerValue]> | null = null;
+
+        // Module.getExportByName(null, "AAsset_read");
+        let mdl = Process.getModuleByName("libandroid.so");
+        // console.log(`mdl - ${mdl}`);
+        if (mdl) {
+            let AAsset_read = mdl.getExportByName("AAsset_read");
+            // console.log(`AAsset_read - ${AAsset_read}`);
+            if (AAsset_read) {
+                _AAsset_read = new NativeFunction(AAsset_read, 'int', ['pointer', 'pointer', 'size_t']);
+            }
+
+            let AAsset_getLength = mdl.getExportByName("AAsset_getLength");
+            // console.log(`AAsset_getLength - ${AAsset_getLength}`);
+            if (AAsset_getLength) {
+                _AAsset_getLength = new NativeFunction(AAsset_read, 'long', ['pointer']);
+            }
+
+
+            let AAssetManager_open = mdl.getExportByName("AAssetManager_open");
+            // console.log(`AAssetManager_open - ${AAssetManager_open}`);
+            if (AAssetManager_open) {
+                Interceptor.attach(AAssetManager_open, {
+                    onEnter: function (args) {
+                        this.file_name = args[1].readCString();
+                    },
+                    onLeave: function (retVal) {
+                        if (this.file_name && this.file_name.indexOf("main.min.js") != -1 && _AAsset_getLength && _AAsset_read) {
+                            let size = _AAsset_getLength(retVal);
+                            console.log(`size - ${size}`);
+                            let buf = Memory.alloc(size);
+                            _AAsset_read(retVal, buf, size);
+                            console.log(`buf \n ${hexdump(buf, { length: 0x50 })}`);
+                            
+                            return retVal;
+                        }
+                        console.error(`file_name - ${this.file_name}, _AAsset_read - ${_AAsset_read}, _AAsset_getLength - ${_AAsset_getLength}`);
+                        return retVal;
+                    }
+                });
+            }
+        }
+    }
+}
+
+setImmediate(() => {
+    // Hook.f00();
+
+
+    setTimeout(function () {
+        // Hook.f01();
+        Hook.f03();
+    }, 5000)
+})
