@@ -2,23 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5d0fb6c6-1655-41c4-92e9-01c9ca37d55b" name="变更" comment="update">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/frida-agent-example.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backup/index.ts_不休江湖" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backup/index.ts_我有一座育龙岛" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backup/index.ts_欢乐大乱斗" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backup/index.ts_火烈鸟保护研究" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backup/index.ts_仙岛大乱斗" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/agent/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/agent/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agent/index.ts_时之幻想曲" beforeDir="false" afterPath="$PROJECT_DIR$/backup/index.ts_时之幻想曲" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agent/index.ts_武林闲侠" beforeDir="false" afterPath="$PROJECT_DIR$/backup/index.ts_武林闲侠" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agent/index.ts_爱琳诗篇" beforeDir="false" afterPath="$PROJECT_DIR$/backup/index.ts_爱琳诗篇" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agent/index.ts_镇魂街" beforeDir="false" afterPath="$PROJECT_DIR$/backup/index.ts_镇魂街" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agent/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/agent/utils.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +53,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\yuan\Desktop\share\frida-agent-example\backup" />
       <recent name="C:\Users\yuan\Desktop\share\frida-agent-example\agent" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -86,8 +73,16 @@
       <workItem from="1646190615755" duration="2276000" />
       <workItem from="1647488251962" duration="11828000" />
       <workItem from="1647846963423" duration="50000" />
-      <workItem from="1647847027894" duration="28297000" />
+      <workItem from="1647847027894" duration="29014000" />
     </task>
+    <task id="LOCAL-00001" summary="update">
+      <created>1648101987143</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1648101987143</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
