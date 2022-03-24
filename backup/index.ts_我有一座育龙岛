@@ -1,0 +1,88 @@
+import {TraceArtFunc, bytes2String, dumpSo, enumIntent, stacks, storeInfo, bytes2HexString, enumClassLoaders} from "./utils";
+
+function hook() {
+    if (Java.available) {
+        Java.perform(function () {
+            // const VivoSignUtils = Java.use("channel.vivo.sdk.VivoSignUtils");
+            // if (!VivoSignUtils) {
+            //     console.error(`VivoSignUtils is null`);
+            //     return;
+            // }
+            // VivoSignUtils.getVivoSign.implementation = function (map: object, str: string) {
+            //     console.log(`[getVivoSign] str - ${str}`);
+            //     var sign = this.getVivoSign(map, str);
+            //     console.log(`[getVivoSign] sign - ${sign}`);
+            //     return sign;
+            // }
+
+            const PackageMgr = Java.use("android.app.ApplicationPackageManager");
+            if (!PackageMgr) {
+                console.error(`PackageMgr is null`);
+                return;
+            }
+            PackageMgr.getPackageInfo.overload('java.lang.String', 'int').implementation = function (name: string, flag: number) {
+                var package_info = this.getPackageInfo(name, flag);
+                if(flag == 64)
+                {
+                    stacks("[getPackageInfo]");
+                    console.log(`[getPackageInfo] name - ${name}, flag - ${flag}`);
+                    console.log(`[getPackageInfo] package_info - ${package_info}`);
+                }
+                return package_info;
+            }
+
+            // const Signature = Java.use('android.content.pm.Signature');
+            // if(!Signature)
+            // {
+            //     console.error(`Signature is null`);
+            //     return;
+            // }
+            // Signature.toByteArray.implementation = function(){
+            //     var arr = this.toByteArray();
+            //     console.log(`[toByteArray] sign arr - ${arr}\nsign string - ${bytes2HexString(arr)}`);
+            //     return arr;
+            // }
+
+            const ba = Java.use("com.bytedance.embedapplog.ba");
+            if(!ba)
+            {
+                console.error(`ba is null`);
+                return;
+            }
+            ba.b.implementation = function(arr:object){
+                var str = this.b(arr);
+                console.log(`[ba.b] str - ${str}`);
+                return str;
+            }
+
+            const AppInfo = Java.use("com.tencent.bugly.crashreport.common.info.AppInfo");
+            if(!AppInfo)
+            {
+                console.error(`AppInfo is null`);
+                return;
+            }
+            AppInfo.e.implementation = function(ctx:object){
+                var str = this.e(ctx);
+                console.log(`[AppInfo.e] str - ${str}`);
+                return str;
+            }
+
+            const f = Java.use("com.vivo.unionsdk.utils.f");
+            if(!f)
+            {
+                console.error(`f is null`);
+                return;
+            }
+            f.式.overload('java.lang.String').implementation = function(str:string)
+            {
+                var sign = this.式(str);
+                console.log(`[f.式] sign - ${sign}, str - ${str}`);
+                return sign;
+            }
+        });
+    }
+}
+
+setTimeout(function () {
+    hook();
+}, 10);

@@ -1,0 +1,81 @@
+import { isBuffer } from "util";
+import { TraceArtFunc, bytes2String, dumpSo, enumIntent, stacks, storeInfo, bytes2HexString } from "./utils";
+
+function f00() {
+    var base = Module.findBaseAddress("libapk-protect.so");
+    console.log(`libapk-protect.so base - ${base}`)
+    if (base) {
+        // var sub_203350 = base.add(0x203350);
+        // Interceptor.attach(sub_203350, {
+        //     onEnter: function (args) {
+        //         // stacks("sub_203350", this.context);
+        //         console.log(`sub_203350: args - ${args[0].readCString()}`);
+        //     },
+        //     onLeave: function (ret) {
+        //         console.log(`sub_203350: ret - ${ret.readCString()}`);
+        //         return ret;
+        //     }
+        // })
+
+        // var sub_20B1D4 = base.add(0x20B1D4);
+        // Interceptor.attach(sub_20B1D4, {
+        //     onEnter: function (args) {
+        //         // stacks("sub_203350", this.context);
+        //         console.log(`sub_20B1D4: args - ${args[0].readCString()}`);
+        //     },
+        //     onLeave: function (ret) {
+        //         console.log(`sub_20B1D4: ret - ${ret.readCString()}`);
+        //         console.log(`========================`);
+        //         return ret;
+        //     }
+        // })
+
+        // var verifySignificantResource = base.add(0x20F74C);
+        // Interceptor.attach(verifySignificantResource, {
+        //     onEnter: function (args) {
+        //         // stacks("sub_203350", this.context);
+        //         console.log(`verifySignificantResource: args - ${args[0].readCString()}`);
+        //     },
+        //     onLeave: function (ret) {
+        //         // console.log(`verifySignificantResource: ret - ${ret.readCString()}`);
+        //         console.log(`========================`);
+        //         return ret;
+        //     }
+        // })
+
+        
+        var addr: NativePointer;
+        var Json_Value_operator = base.add(0x21EB10);
+        var Json_Value_operator_f = new NativeFunction(Json_Value_operator, 'pointer',['pointer','pointer']);
+        Interceptor.replace(Json_Value_operator_f,new NativeCallback(function(a1,a2){
+            var ret = Json_Value_operator_f(a1,a2);
+            if(a2.readCString()?.indexOf("check_modification") != -1)
+            {
+                addr = ret;
+                console.log(`Json_Value_operator: ret - ${ret}, addr - ${addr}`);
+            }
+            
+            return ret;
+        },'pointer',['pointer','pointer','pointer', 'char']));
+
+
+        var Json_Value_asBool = base.add(0x21D6F0);
+        var Json_Value_asBool_hook = new NativeFunction(Json_Value_asBool, 'int',['pointer']);
+        Interceptor.replace(Json_Value_asBool_hook,new NativeCallback(function (a){
+            console.log(`Json_Value_asBool: arg - ${a}, addr - ${addr}`);
+            var ret = Json_Value_asBool_hook(a);
+            if(addr && a.equals(addr))
+            {
+                console.log(`Json_Value_asBool: ret - ${ret}`);
+                return 0;
+            }
+            return ret;
+        },'int',['pointer']))
+    }
+}
+
+
+setTimeout(function () {
+    console.log("hook\n");
+    f00();
+}, 500)

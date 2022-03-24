@@ -1,0 +1,71 @@
+import { TraceArtFunc, bytes2String, dumpSo, enumIntent, stacks, storeInfo, bytes2HexString, enumClassLoaders } from "./utils";
+
+function hook() {
+    const mdl = Process.findModuleByName("libegret.so");
+    if(mdl)
+    {
+        console.log(`mdl - ${mdl}, name - ${mdl.name}, base - ${mdl.base}`);
+        // const sub_2F1738 = mdl.base.add(0x2f1738);
+        // Interceptor.attach(sub_2F1738, {
+        //     onLeave: function (ret){
+        //         return ret;
+        //     },
+        //     onEnter:function (args){
+        //         console.log(`sub_2F1738 enter!`);
+        //     }
+        // });
+        // const sub_3FEF24 = mdl.base.add(0x3FEF24);
+        // Interceptor.attach(sub_3FEF24, {
+        //     onLeave: function (ret){
+        //         return ret;
+        //     },
+        //     onEnter:function (args){
+        //         console.log(`sub_3FEF24 enter!`);
+        //     }
+        // });
+        const sub_3FF3B4 = mdl.base.add(0x3FF3B4);
+        Interceptor.attach(sub_3FF3B4, {
+            onLeave: function (ret){
+                return ret;
+            },
+            onEnter:function (args){
+                console.log(`sub_3FF3B4 enter!`);
+            }
+        });
+        const sub_67B438 = mdl.base.add(0x67B438);
+        Interceptor.attach(sub_67B438, {
+            onLeave: function (ret){
+                return ret;
+            },
+            onEnter:function (args){
+                console.log(`sub_67B438 enter!`);
+            }
+        });
+        const sub_67B4CC = mdl.base.add(0x67B4CC);
+        Interceptor.attach(sub_67B4CC, {
+            onLeave: function (ret){
+                return ret;
+            },
+            onEnter:function (args){
+                console.log(`sub_67B4CC enter!`);
+            }
+        });
+        // const sub_67B568 = mdl.base.add(0x67B568);
+        // Interceptor.attach(sub_67B568, {
+        //     onLeave: function (ret){
+        //         return ret;
+        //     },
+        //     onEnter:function (args){
+        //         console.log(`sub_67B568 enter!`);
+        //     }
+        // });
+
+        return;
+    }
+
+    console.error("no find module");
+}
+
+setTimeout(function () {
+    hook();
+}, 10);

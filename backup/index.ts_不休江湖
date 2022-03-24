@@ -1,0 +1,80 @@
+import { TraceArtFunc, bytes2String, dumpSo, enumIntent, stacks, storeInfo } from "./utils";
+
+setTimeout(function () {
+    // handleScriptFile();
+    hanldeAD();
+}, 100);
+
+
+function handleScriptFile() {
+    // if (Java.available) {
+    //     Java.perform(function () {
+    //         var adactivity = Java.use("com.qq.e.ads.RewardvideoPortraitADActivity");
+    //         console.log(`adactivity - ${adactivity}`);
+    //         if (adactivity) {
+    //             adactivity.onCreate.implementation = function(bundle:object){
+    //                 stacks("[com.qq.e.ads.RewardvideoPortraitADActivity] onCreate");
+    //                 return this.onCreate(bundle);
+    //             }
+    //         }
+    //         adactivity = Java.use("com.bytedance.sdk.openadsdk.stub.activity.Stub_Standard_Portrait_Activity");
+    //         console.log(`adactivity - ${adactivity}`);
+    //         if (adactivity) {
+    //             adactivity.getPluginPkgName.implementation = function(){
+    //                 stacks("[com.bytedance.sdk.openadsdk.stub.activity.Stub_Standard_Portrait_Activity] getPluginPkgName");
+    //                 return this.getPluginPkgName();
+    //             }
+    //         }
+    //     });
+    // }
+
+    var ScriptEngine_EvalString = Module.findExportByName("libcocos2djs.so", "_ZN2se12ScriptEngine10evalStringEPKclPNS_5ValueES2_");
+    console.log(`ScriptEngine_EvalString - ${ScriptEngine_EvalString}`);
+    if (ScriptEngine_EvalString) {
+        var _ScriptEngine_EvalString = new NativeFunction(ScriptEngine_EvalString, `pointer`, [`pointer`, `pointer`, `long`, `pointer`, `pointer`])
+        // void *  ScriptEngine_EvalString_hook(void *thiz, const char *script, long length, void *Rval, const char *fileName)
+        Interceptor.replace(_ScriptEngine_EvalString, new NativeCallback(function (thiz, script, length, Rval, fileName) {
+            if (fileName != NULL) {
+                console.log(`file name - ${fileName.readCString()}`);
+            }
+            var result = _ScriptEngine_EvalString(thiz, script, length, Rval, fileName);
+            return result;
+        }, `pointer`, [`pointer`, `pointer`, `long`, `pointer`, `pointer`]));
+    }
+}
+
+function hanldeAD() {
+    if (Java.available) {
+        Java.perform(function () {
+            var klass = Java.use("org.cocos2dx.javascript.AppActivity");
+            // console.log(`AppActivity - ${klass}`);
+            if (klass) {
+                klass.checkIsChuanShanJiaADReadyToPlay.implementation = function(){
+                    var retv =  this.checkIsChuanShanJiaADReadyToPlay();
+                    console.log(`[AppActivity.checkIsChuanShanJiaADReadyToPlay] result - ${retv}`);
+                    console.log(`--------------------------------`);
+                    return retv;
+                }
+                klass.checkIsGDTADReadyToPlay.implementation = function(){
+                    var retv =  this.checkIsGDTADReadyToPlay();
+                    console.log(`[AppActivity.checkIsGDTADReadyToPlay] result - ${retv}`);
+                    console.log(`--------------------------------`);
+                    return retv;
+                }
+            }
+
+            klass = Java.use("org.cocos2dx.javascript.GDTAdManagerHolder");
+            // console.log(`TTAdManagerHolder - ${klass}`);
+            if(klass){
+                klass.isAdReadyOK.implementation = function(){
+                    stacks("GDTAdManagerHolder.isAdReadyOK");
+                    console.log(`[GDTAdManagerHolder.isAdReadyOK] AdReadyOK - ${this.AdReadyOK.value}`);
+                    var retv = this.isAdReadyOK();
+                    console.log(`[GDTAdManagerHolder.isAdReadyOK] result - ${retv}`);
+                    console.log(`--------------------------------`);
+                    return retv;
+                }
+            }
+        });
+    }
+}
