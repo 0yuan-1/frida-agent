@@ -333,7 +333,7 @@ export function enumIntent(intent: any) {
     }
 }
 
-export function hook_dlopen(search_so: string | null) {
+export function hook_dlopen(search_so: string | null){
     const dlopen_f = Module.findExportByName(null, 'dlopen');
     if (dlopen_f) {
         Interceptor.attach(dlopen_f, {
@@ -351,21 +351,6 @@ export function hook_dlopen(search_so: string | null) {
                 }
             }
         });
-
-        // var dlopen = new NativeFunction(dlopen_f, 'pointer', ['pointer', 'int']);
-        // Interceptor.replace(dlopen, new NativeCallback(function (ptr_path, mode) {
-        //     var path = ptr_path.readCString();
-        //     // if (path?.indexOf("unity") != -1)
-        //     if (module_name && path?.indexOf(module_name) != -1) {
-        //         console.log(`[dlopen] path - ${path}, mod - ${mode}`);
-        //     }
-        //
-        //     if (module_name == null) {
-        //         console.log(`[dlopen] path - ${path}, mod - ${mode}`);
-        //     }
-        //
-        //     return dlopen(ptr_path, mode);
-        // }, 'pointer', ['pointer', 'int']));
     }
 
     const dlopen_ext_f = Module.findExportByName(null, "android_dlopen_ext");
@@ -384,22 +369,7 @@ export function hook_dlopen(search_so: string | null) {
                 }
             }
         });
-
-        // var dlopen_ext = new NativeFunction(dlopen_ext_f, 'pointer', ['pointer', 'int']);
-        // Interceptor.replace(dlopen_ext, new NativeCallback(function (ptr_path, mode) {
-        //     var path = ptr_path.readCString();
-        //     if (module_name && path?.indexOf(module_name) != -1) {
-        //         console.log(`[android_dlopen_ext] path - ${path}, mod - ${mode}`);
-        //     }
-        //
-        //     if (module_name == null) {
-        //         console.log(`[android_dlopen_ext] path - ${path}, mod - ${mode}`);
-        //     }
-        //
-        //     return dlopen_ext(ptr_path, mode);
-        // }, 'pointer', ['pointer', 'int']));
     }
-
 }
 
 // 未完善
