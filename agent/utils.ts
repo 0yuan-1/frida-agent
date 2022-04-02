@@ -333,7 +333,7 @@ export function enumIntent(intent: any) {
     }
 }
 
-export function hook_dlopen(search_so: string | null){
+export function hook_dlopen(search_so: string | null) {
     const dlopen_f = Module.findExportByName(null, 'dlopen');
     if (dlopen_f) {
         Interceptor.attach(dlopen_f, {
@@ -371,6 +371,36 @@ export function hook_dlopen(search_so: string | null){
         });
     }
 }
+
+export function show_maps() {
+    // @ts-ignore
+    const fopen = new NativeFunction(Module.findExportByName(null, "fopen"), 'pointer', ['pointer', 'pointer']);
+    // @ts-ignore
+    const fclose = new NativeFunction(Module.findExportByName(null, 'fclose'), 'int', ['pointer']);
+    // @ts-ignore
+    const fgets = new NativeFunction(Module.findExportByName(null, "gets"), 'pointer', ['pointer', 'int', 'pointer']);
+    // @ts-ignore
+    const feof = new NativeFunction(Module.findExportByName(null, "feof"), 'int', ['pointer']);
+
+    const path = Memory.allocUtf8String("/proc/" + Process.id + "/maps");
+    const mode = Memory.allocUtf8String("r");
+    let buffer = Memory.alloc(1024);
+    buffer.add(1023).writeU8(0);
+    const fp = fopen(path, mode);
+    console.log(`path - ${path.readCString()}, fp - ${fp}`);
+    let eof = 0;
+    if (fp != null) {
+        while (eof <= 5) {
+            eof = eof + 1;
+            fgets(buffer, 1023, fp);
+            console.log(`line - ${buffer.readCString()}`);
+        }
+        fclose(fp);
+        return;
+    }
+    console.log(`fopen fail!`);
+}
+
 
 // 未完善
 function handleScriptFile() {

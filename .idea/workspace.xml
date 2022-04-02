@@ -5,7 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/agent/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/agent/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/agent/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/agent/utils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +49,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/backup" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
-    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\PyCharm 2021.3.3\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\PyCharm 2021.3.2\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -100,6 +99,8 @@
       <workItem from="1647846963423" duration="50000" />
       <workItem from="1647847027894" duration="29014000" />
       <workItem from="1648302090813" duration="7619000" />
+      <workItem from="1648456550218" duration="4971000" />
+      <workItem from="1648893558688" duration="2068000" />
     </task>
     <task id="LOCAL-00001" summary="update">
       <created>1648101987143</created>
@@ -128,5 +129,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update" />
     <option name="LAST_COMMIT_MESSAGE" value="update" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/frida_agent_example$main.coverage" NAME="main 覆盖结果" MODIFIED="1648432610514" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
