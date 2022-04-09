@@ -113,7 +113,7 @@ export function TraceMethod(target: string, bTraceStack: boolean) {
                         console.log("arg[" + j + "]: " + arguments[j]);
                     }
                     console.log("\nretval: " + retval);
-                    bytes2HexString(retval);
+                    bytes2HexString("Method: ", retval);
                     if (bTraceStack) {
                         stacks(target);
                     }
@@ -247,24 +247,23 @@ export function getCurTime(): string {
     return _hour + ":" + _minute + ":" + _second + ":" + _milli_sec;
 }
 
-export function bytes2HexString(bytes: any): string | null {
+export function bytes2HexString(tag: string, bytes: any) {
     if (Java.available) {
         var buffer = Java.array('byte', bytes);
-        var content = "length:" + buffer.length + " content:\r\n";
+        var content = tag + " length:" + buffer.length + " content:\r\n";
         Java.perform(function () {
             var Integer = Java.use("java.lang.Integer");
             var result = "";
             for (var i = 0; i < buffer.length; ++i) {
-                if (i == 16) {
+                result += "0x" + Integer.toHexString(buffer[i] & 0xFF) + ", ";
+                if ((i+1) % 16 == 0) {
                     result += "\r\n";
                 }
-                result += "0x" + Integer.toHexString(buffer[i] & 0xFF) + "\t";
             }
             content += result;
-            return content;
+            console.log(content);
         });
     }
-    return null;
 }
 
 export function bytes2String(bytes: any): string | null {
@@ -367,6 +366,28 @@ export function hook_dlopen(search_so: string | null) {
                 } else if (search_so == null) {
                     console.log(`[android_dlopen_ext] path - ${path}, mod - ${mode}`);
                 }
+            }
+        });
+    }
+}
+
+export function hook_signature(package_name:string) {
+    if (Java.available) {
+        Java.perform(function () {
+            const proxy = Java.use("android.content.pm.IPackageManager$Stub$Proxy")
+            proxy.getPackageInfo.implementation = function (packageName: string, flags: number, userId: number) {
+                const ret = this.getPackageInfo(packageName, flags, userId);
+                if (packageName.indexOf(package_name) != -1 && flags == 64) {
+                    console.log(`[getPackageInfo] packageName - ${packageName},  flags - ${flags}, userId - ${userId}, packageInfo - ${ret}`);
+                    const packageInfo_ins = Java.cast(ret, Java.use("android.content.pm.PackageInfo"));
+                    const signatures_ins = packageInfo_ins.signatures.value;
+                    if (signatures_ins != null) {
+                        const signature = Java.cast(signatures_ins[0], Java.use("android.content.pm.Signature"));
+                        bytes2HexString("mSignature: ", signature.mSignature.value);
+                    }
+                }
+
+                return ret;
             }
         });
     }

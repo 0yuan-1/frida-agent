@@ -456,3 +456,46 @@ setImmediate(() => {
     //     f01();
     // }, 3000);
 })
+
+
+
+// 新版本处理头条网页登陆
+import {bytes2HexString, bytes2String, dumpSo, enumIntent, show_maps, stacks} from "./utils";
+
+function hook_java() {
+    if (Java.available) {
+        Java.perform(function () {
+            // 获取头条网页发送时的签名
+            // const Signature = Java.use("tt.com.bytedance.sdk.account.common.utils.c");
+            // Signature.a.overload('java.util.List').implementation = function (list: object) {
+            //     var sign = this.a(list);
+            //     console.log(`sign = ${sign}`);
+            //     return sign;
+            // };
+
+            // 根据 startActivityForResult 来判断点击头条登陆按钮后的函数位置
+            const Activity = Java.use("android.app.Activity");
+            Activity.startActivityForResult.overload('android.content.Intent', 'int').implementation = function (intent: object, requestCode: number) {
+                // stacks("startActivityForResult");
+                enumIntent(intent);
+                return this.startActivityForResult(intent, requestCode);
+            };
+            // 验证
+            const c = Java.use("com.bytedance.sdk.account.open.tt.impl.c");
+            c.a.overload('android.app.Activity', 'tt.com.bytedance.sdk.account.common.model.c$a').implementation = function (activity: object, a2: object) {
+                stacks("c.a")
+                console.log(`c.a(activity, c.a)`);
+                return this.a(activity, a2);
+            }
+        });
+    }
+}
+
+function hook_native() {
+
+}
+
+setImmediate(() => {
+    hook_java();
+    hook_native();
+});
