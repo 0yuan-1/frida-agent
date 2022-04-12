@@ -12,7 +12,12 @@ function hook_native() {
 
 }
 
+setTimeout(()=>{
+    dumpSo("libgvradio.so");
+}, 1000);
+
+
 setImmediate(() => {
-    hook_java();
-    hook_native();
+    // hook_java();
+    // hook_native();
 });

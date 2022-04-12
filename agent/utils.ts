@@ -144,7 +144,6 @@ export function dumpLua(path: string, name: string, buff: NativePointer, size: n
 
 export function dumpSo(soName: string) {
     if (Java.available) {
-        console.log("Java vm true");
         Java.perform(function () {
             console.log("dump enter");
             let currentApplication = Java.use("android.app.ActivityThread").currentApplication();
@@ -170,8 +169,9 @@ export function dumpSo(soName: string) {
             }
             console.error(`no load ${soName}`);
         });
+    } else {
+        console.error("Java vm false");
     }
-    console.error("Java vm false");
 }
 
 export function storeInfo(path: string, info: string) {
@@ -256,7 +256,7 @@ export function bytes2HexString(tag: string, bytes: any) {
             var result = "";
             for (var i = 0; i < buffer.length; ++i) {
                 result += "0x" + Integer.toHexString(buffer[i] & 0xFF) + ", ";
-                if ((i+1) % 16 == 0) {
+                if ((i + 1) % 16 == 0) {
                     result += "\r\n";
                 }
             }
@@ -371,7 +371,7 @@ export function hook_dlopen(search_so: string | null) {
     }
 }
 
-export function hook_signature(package_name:string) {
+export function hook_signature(package_name: string) {
     if (Java.available) {
         Java.perform(function () {
             const proxy = Java.use("android.content.pm.IPackageManager$Stub$Proxy")
